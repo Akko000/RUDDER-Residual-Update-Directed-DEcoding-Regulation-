@@ -19,7 +19,6 @@ from tqdm import tqdm
 
 from transformers import InstructBlipProcessor, InstructBlipForConditionalGeneration
 
-# ====== 你的工程配置 & 方法 ======
 from config_hal import *
 from methods import (
     set_global_seed,
