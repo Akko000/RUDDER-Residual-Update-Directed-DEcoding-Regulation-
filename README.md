@@ -1,1 +1,1 @@
-# RUDDER-Residual-Update-Directed-DEcoding-Regulation-
+# RUDDER: Residual Update Directed DEcoding Regulation
