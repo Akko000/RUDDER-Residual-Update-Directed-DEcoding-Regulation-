@@ -49,11 +49,11 @@ $$
 \mathbf{v}_{\mathrm{CARD}}
 =
 \frac{
-\mathrm{Pool}\left(\left\{\Delta_i^{l}\right\}_{i \in \mathcal{T}_{\mathrm{pre}}}\right)
+\operatorname{Pool}\bigl(\{\Delta_i^{l}\}_{i \in \mathcal{T}_{\mathrm{pre}}}\bigr)
 }{
-\left\|
-\mathrm{Pool}\left(\left\{\Delta_i^{l}\right\}_{i \in \mathcal{T}_{\mathrm{pre}}}\right)
-\right\|_2
+\left\lVert
+\operatorname{Pool}\bigl(\{\Delta_i^{l}\}_{i \in \mathcal{T}_{\mathrm{pre}}}\bigr)
+\right\rVert_2
 }.
 $$
 
@@ -64,17 +64,25 @@ This produces an input-specific direction that acts as a persistent visual ancho
 During decoding, RUDDER computes the cosine similarity between the current hidden state and $\mathbf{v}_{\mathrm{CARD}}$, then maps it to an adaptive gate using a Beta-inspired formulation:
 
 $$
-s_t = \cos\left(\mathbf{h}_{l,t}, \mathbf{v}_{\mathrm{CARD}}\right).
+s_t
+=
+\cos\bigl(\mathbf{h}_{l,t}, \mathbf{v}_{\mathrm{CARD}}\bigr).
 $$
 
 $$
-\alpha_t = \mathrm{softplus}\left(k s_t + c\right),
+\alpha_t
+=
+\operatorname{softplus}(k s_t + c),
 \qquad
-\beta_t = \mathrm{softplus}\left(-k s_t + c\right).
+\beta_t
+=
+\operatorname{softplus}(-k s_t + c).
 $$
 
 $$
-g_t = \frac{\alpha_t}{\alpha_t + \beta_t}.
+g_t
+=
+\frac{\alpha_t}{\alpha_t + \beta_t}.
 $$
 
 The final steering vector is:
@@ -90,7 +98,6 @@ This vector is injected into the residual stream only during answer generation.
 <p align="center">
   <img src="assets/method_overview.png" width="90%">
 </p>
-
 ## Main Results
 
 RUDDER reduces hallucination while preserving general multimodal capability.
