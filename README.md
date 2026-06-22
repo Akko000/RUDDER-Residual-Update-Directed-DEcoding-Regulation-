@@ -37,44 +37,53 @@ RUDDER contains two main components.
 
 During the prefill stage, RUDDER extracts a visual evidence vector from the self-attention residual updates of a selected decoder layer.
 
-Given the residual update at layer `l` for token `i`:
+Given the self-attention output at layer $l$ for token $i$, the residual update is defined as:
 
-```text
-Delta_i^l = A_i^l
-```
-
-RUDDER pools these updates over the prefill span and normalizes the result:
-
-```text
 $$
-v_CARD = Pool({Delta_i^l}) / ||Pool({Delta_i^l})||_2
+\Delta_i^{l} = A_i^{l}.
 $$
-```
+
+RUDDER pools these residual updates over the prefill span $\mathcal{T}_{\mathrm{pre}}$ and applies $\ell_2$ normalization:
+
+$$
+\mathbf{v}_{\mathrm{CARD}}
+=
+\frac{
+\mathrm{Pool}\left(\left\{\Delta_i^{l}\right\}_{i \in \mathcal{T}_{\mathrm{pre}}}\right)
+}{
+\left\|
+\mathrm{Pool}\left(\left\{\Delta_i^{l}\right\}_{i \in \mathcal{T}_{\mathrm{pre}}}\right)
+\right\|_2
+}.
+$$
 
 This produces an input-specific direction that acts as a persistent visual anchor.
 
 ### 2. Beta Gate
 
-During decoding, RUDDER computes the cosine similarity between the current hidden state and `v_CARD`, then maps it to an adaptive gate using a Beta-inspired formulation:
+During decoding, RUDDER computes the cosine similarity between the current hidden state and $\mathbf{v}_{\mathrm{CARD}}$, then maps it to an adaptive gate using a Beta-inspired formulation:
 
-```text
 $$
-s_t = cos(h_{l,t}, v_CARD)
-
-alpha_t = softplus(k * s_t + c)
-beta_t  = softplus(-k * s_t + c)
-
-g_t = alpha_t / (alpha_t + beta_t)
+s_t = \cos\left(\mathbf{h}_{l,t}, \mathbf{v}_{\mathrm{CARD}}\right).
 $$
-```
+
+$$
+\alpha_t = \mathrm{softplus}\left(k s_t + c\right),
+\qquad
+\beta_t = \mathrm{softplus}\left(-k s_t + c\right).
+$$
+
+$$
+g_t = \frac{\alpha_t}{\alpha_t + \beta_t}.
+$$
 
 The final steering vector is:
 
-```text
 $$
-v_t^steer = alpha_max * g_t * v_CARD
+\mathbf{v}^{\mathrm{steer}}_t
+=
+\alpha_{\max} \, g_t \, \mathbf{v}_{\mathrm{CARD}}.
 $$
-```
 
 This vector is injected into the residual stream only during answer generation.
 
@@ -152,13 +161,11 @@ A typical RUDDER inference pipeline contains:
 Recommended files under `assets/`:
 
 ```text
+
 assets/
+
 ├── teaser.png              # Figure 1: hallucination example and method comparison
-├── method_overview.png     # Figure 2: RUDDER workflow
-├── chair_results.png       # Table 1: CHAIR main results, optional
-├── efficiency.png          # Table 4: throughput comparison, optional
-├── ablation_layer.png      # Figure 3: layer ablation, optional
-└── hyperparam_heatmap.png  # Figure 4: alpha/k sensitivity, optional
+└── method_overview.png     # Figure 2: RUDDER workflow
 ```
 
 For the README, the most important figures are:
@@ -172,14 +179,26 @@ The other figures are optional and can be used if you want a more complete proje
 
 ```text
 RUDDER/
-├── assets/                 # Figures used in README
-├── examples/               # Example images and prompts
-├── Idefics2/                 
-│   ├── Ide_methods.py
-│   ├── Ide_methods.py              
-│   └── Ide_chair.py        
-│   
-├──               # Evaluation and demo scripts
+├── assets/
+│   ├── teaser.png
+│   └── method_overview.png
+├── Idefics2/
+│   ├── ide_methods.py
+│   ├── ide_chair.py
+│   └── ide_pope.py
+├── InstructBlip/
+│   ├── blip_methods.py
+│   ├── blip_chair.py
+│   └── blip_pope.py
+├── LLaVA/
+│   ├── llava_methods.py
+│   ├── llava_chair.py
+│   └── llava_pope.py
+├── Qwen/
+│   ├── qwen_methods.py
+│   ├── qwen_chair.py
+│   └── qwen_pope.py
+├── config.py
 ├── environment.yml
 └── README.md
 ```
