@@ -129,23 +129,12 @@ RUDDER operates within a single inference pass and introduces little overhead. I
 git clone https://github.com/Akko000/RUDDER-Residual-Update-Directed-DEcoding-Regulation-.git
 cd RUDDER-Residual-Update-Directed-DEcoding-Regulation-
 
-conda create -n rudder python=3.10
+conda env create -f environment.yml
 conda activate rudder
 
-pip install -r requirements.txt
 ```
 
 ## Usage
-
-Example command:
-
-```bash
-python run_rudder.py \
-  --model llava-1.5-7b \
-  --image examples/demo.jpg \
-  --prompt "Please help me describe the image in detail." \
-  --method rudder_beta
-```
 
 A typical RUDDER inference pipeline contains:
 
