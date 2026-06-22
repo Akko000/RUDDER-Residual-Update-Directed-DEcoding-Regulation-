@@ -12,7 +12,7 @@ Official implementation of **RUDDER**, a low-overhead inference-time interventio
 > Paper: https://arxiv.org/abs/2511.10292
 
 <p align="center">
-  <img src="assets/teaser.pdf" width="90%">
+  <img src="assets/teaser.png" width="90%">
 </p>
 
 ## Overview
@@ -46,7 +46,9 @@ Delta_i^l = A_i^l
 RUDDER pools these updates over the prefill span and normalizes the result:
 
 ```text
+$$
 v_CARD = Pool({Delta_i^l}) / ||Pool({Delta_i^l})||_2
+$$
 ```
 
 This produces an input-specific direction that acts as a persistent visual anchor.
@@ -56,24 +58,28 @@ This produces an input-specific direction that acts as a persistent visual ancho
 During decoding, RUDDER computes the cosine similarity between the current hidden state and `v_CARD`, then maps it to an adaptive gate using a Beta-inspired formulation:
 
 ```text
+$$
 s_t = cos(h_{l,t}, v_CARD)
 
 alpha_t = softplus(k * s_t + c)
 beta_t  = softplus(-k * s_t + c)
 
 g_t = alpha_t / (alpha_t + beta_t)
+$$
 ```
 
 The final steering vector is:
 
 ```text
+$$
 v_t^steer = alpha_max * g_t * v_CARD
+$$
 ```
 
 This vector is injected into the residual stream only during answer generation.
 
 <p align="center">
-  <img src="assets/method_overview.pdf" width="90%">
+  <img src="assets/method_overview.png" width="90%">
 </p>
 
 ## Main Results
