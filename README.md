@@ -41,7 +41,7 @@ RUDDER pools these updates over the prefill span and normalizes the result:
 
 v_CARD = Pool({Δ_i^l}) / ||Pool({Δ_i^l})||_2
 
-This produces an input-specific direction that acts as a visual anchor.
+This produces an input-specific direction that acts as a persistent visual anchor.
 
 2. Beta Gate
 
@@ -66,7 +66,7 @@ Main Results
 
 RUDDER reduces hallucination while preserving general multimodal capability.
 
-On CHAIR with greedy decoding:
+CHAIR Results
 
 Model	Method	CHAIRs ↓	CHAIRi ↓
 LLaVA-1.5-7B	Vanilla	48.6	13.6
@@ -78,7 +78,9 @@ InstructBLIP	RUDDER-Beta	27.1	8.5
 Qwen2.5-VL-7B	Vanilla	35.2	9.5
 Qwen2.5-VL-7B	RUDDER	26.9	7.0
 
-RUDDER also maintains high efficiency. In the paper, RUDDER-Beta keeps about 96% throughput compared with vanilla decoding, while many contrastive or steering baselines require extra forward passes.
+Efficiency
+
+RUDDER operates within a single inference pass and introduces little overhead. In our experiments, RUDDER-Beta maintains about 96% throughput compared with vanilla decoding, while many contrastive or steering baselines require extra forward passes.
 
 Installation
 
@@ -90,13 +92,6 @@ pip install -r requirements.txt
 
 Usage
 
-Example usage will depend on the target LVLM backbone. A typical RUDDER inference pipeline contains:
-
-# 1. Load LVLM
-# 2. Register hook at the selected decoder layer
-# 3. Extract CARD during prefill
-# 4. Decode with RUDDER-Beta or RUDDER-Add
-
 Example command:
 
 python run_rudder.py \
@@ -104,6 +99,32 @@ python run_rudder.py \
   --image examples/demo.jpg \
   --prompt "Please help me describe the image in detail." \
   --method rudder_beta
+
+A typical RUDDER inference pipeline contains:
+
+# 1. Load the LVLM backbone.
+# 2. Register a hook at the selected decoder layer.
+# 3. Extract CARD during the prefill stage.
+# 4. Decode with RUDDER-Beta or RUDDER-Add.
+
+Assets
+
+Recommended files under assets/:
+
+assets/
+├── teaser.png              # Figure 1: hallucination example and method comparison
+├── method_overview.png     # Figure 2: RUDDER workflow
+├── chair_results.png       # Table 1: CHAIR main results, optional
+├── efficiency.png          # Table 4: throughput comparison, optional
+├── ablation_layer.png      # Figure 3: layer ablation, optional
+└── hyperparam_heatmap.png  # Figure 4: alpha/k sensitivity, optional
+
+For the README, the most important figures are:
+
+1. teaser.png
+2. method_overview.png
+
+The other figures are optional and can be used if you want a more complete project page.
 
 Repository Structure
 
